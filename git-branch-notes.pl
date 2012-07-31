@@ -61,4 +61,44 @@ $database->do(q[
     );
 ]);
 
+# Read our command from the command-line.
+our $command = $ARGV[0];
+
+# Make sure the command is valid, i.e. one we recognize.
+if ($command !~ "show" and $command !~ "add") {
+    die("Error: Invalid command $command\n");
+}
+
+# Returns an array reference of all of the branch information.  Each
+# element in the array is itself an array with two elements:
+#
+#     1. The name of the branch.
+#
+#     2. The notes about the branch.
+#
+# The elements of the array are sorted by branch name in ascending
+# alphabetical order.
+sub get_branch_information() {
+    return $database->selectall_arrayref(q[
+        SELECT name, notes
+        FROM branch_notes
+        ORDER BY name ASC;
+    ]);
+}
+
+# Process the 'show' command.  We display the name and notes for each
+# branch on standard output.  The output format is in Markdown and
+# uses multiple newlines to separate branches.  That is because
+# personally I intended to often redirect the output of this command
+# into emails, and those I always write in Markdown.
+if ($command ~~ "show") {
+    my $information = get_branch_information;
+
+    for my $branch (@$information) {
+        say $branch->[0];
+        say "=" x length($branch->[0]), "\n";
+        say $branch->[1], "\n\n\n";
+    }
+}
+
 __END__
