@@ -46,4 +46,19 @@ our $database = DBI->connect("dbi:SQLite:dbname=$database_filename")
 # Exit immediately if we have any database errors.
 $database->{RaiseError} = 1;
 
+# Create the table of branch notes information if it does not exist.
+# We store two things in each row:
+#
+#     1. The branch name.
+#
+#     2. User notes about the branch.
+#
+# The branch name must be unique.
+$database->do(q[
+    CREATE TABLE IF NOT EXISTS branch_notes (
+        name  TEXT NOT NULL UNIQUE,
+        notes TEXT NOT NULL
+    );
+]);
+
 __END__
