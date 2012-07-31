@@ -39,4 +39,8 @@ strip_newlines_from $git_info_directory;
 # The name of our database file.
 our $database_filename = "$git_info_directory/branch-notes.sqlite";
 
+# Open the database or abort.
+our $database = DBI->connect("dbi:SQLite:dbname=$database_filename")
+    or die("Error: Could not open $database_filename\n");
+
 __END__
