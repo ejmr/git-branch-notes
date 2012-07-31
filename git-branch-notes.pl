@@ -86,6 +86,21 @@ sub get_branch_information() {
     ]);
 }
 
+# Returns the name of the editor to use for adding new notes.  If we
+# cannot find a suitable editor then this function will return an
+# empty string.
+sub get_editor() {
+    if ($ENV{"EDITOR"}) {
+        return $ENV{"EDITOR"};
+    }
+    elsif (qx(git config --get core.editor)) {
+        return qx(git config --get.core.editor);
+    }
+    else {
+        return q();
+    }
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -99,6 +114,12 @@ if ($command ~~ "show") {
         say "=" x length($branch->[0]), "\n";
         say $branch->[1], "\n\n\n";
     }
+}
+
+# Process the 'add' command.  This opens up the user's editor and
+# reads in a note to save for the current branch.
+if ($command ~~ "add") {
+    say get_editor;
 }
 
 __END__
