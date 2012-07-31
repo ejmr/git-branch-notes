@@ -43,4 +43,7 @@ our $database_filename = "$git_info_directory/branch-notes.sqlite";
 our $database = DBI->connect("dbi:SQLite:dbname=$database_filename")
     or die("Error: Could not open $database_filename\n");
 
+# Exit immediately if we have any database errors.
+$database->{RaiseError} = 1;
+
 __END__
