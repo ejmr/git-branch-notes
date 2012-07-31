@@ -61,4 +61,12 @@ $database->do(q[
     );
 ]);
 
+# Read our command from the command-line.
+our $command = $ARGV[0];
+
+# Make sure the command is valid, i.e. one we recognize.
+if ($command !~ "show" and $command !~ "add") {
+    die("Error: Invalid command $command\n");
+}
+
 __END__
