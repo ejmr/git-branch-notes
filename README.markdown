@@ -49,7 +49,29 @@ looks for the environment variable `EDITOR`, and then checks the Git
 configuration value `core.editor`, and failing that aborts with an
 error message.
 
+Here is an example of the `show` command:
 
+    $ git branch-notes show
+    ejmr/add-command
+    ================
+
+    Can I replace notes?
+
+
+
+    ejmr/show-command
+    =================
+
+    Can almost merge.
+
+And here is an example of `add`:
+
+    $ git branch-notes add
+    Waiting on emacs...
+    Saved notes for ejmr/rm-notes
+
+During the ‘Waiting on…’ statement the program opens the user’s editor
+on a temporary file where the user writes the notes he wants to save.
 
 License
 =======
