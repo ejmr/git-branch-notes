@@ -76,6 +76,7 @@ And here is an example of `rm`, which removes notes about a given
 branch:
 
     $ git branch-notes rm ejmr/completed-feature
+    Removed notes for ejmr/completed-feature
 
 
 
