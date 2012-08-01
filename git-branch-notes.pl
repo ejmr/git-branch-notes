@@ -222,9 +222,7 @@ if ($command ~~ "add") {
     my $notes;
     {
         local $/ = undef;
-        open my $temporary_file_handle, "<", $notes_file
-            or die("Error: Cannot read from notes file $notes_file\n");
-        $notes = <$temporary_file_handle>;
+        $notes = <$notes_file>;
     }
 
     save_notes_for_branch($current_branch, $notes);
