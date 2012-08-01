@@ -20,6 +20,7 @@
 
 use common::sense;
 use DBI;
+use File::Temp;
 
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
@@ -86,6 +87,34 @@ sub get_branch_information() {
     ]);
 }
 
+# Returns the name of the editor to use for adding new notes.  If we
+# cannot find a suitable editor then this function will return an
+# empty string.
+sub get_editor() {
+    if ($ENV{"EDITOR"}) {
+        return $ENV{"EDITOR"};
+    }
+    elsif (qx(git config --get core.editor)) {
+        return qx(git config --get.core.editor);
+    }
+    else {
+        return q();
+    }
+}
+
+# Takes a branch name and a string of notes, and saves those notes in
+# the database for that branch.  If the branch is already in the
+# database then the new notes replace the existing ones.  This
+# function returns no value.
+sub save_notes_for_branch($$) {
+    my ($branch, $notes) = @_;
+    my $insert = $database->prepare(q[
+        INSERT OR REPLACE INTO branch_notes (name, notes) VALUES (?, ?);
+    ]);
+
+    $insert->execute($branch, $notes);
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -99,6 +128,36 @@ if ($command ~~ "show") {
         say "=" x length($branch->[0]), "\n";
         say $branch->[1], "\n\n\n";
     }
+}
+
+# Process the 'add' command.  This opens up the user's editor and
+# reads in a note to save for the current branch.
+if ($command ~~ "add") {
+    my $current_branch = qx(git name-rev --name-only HEAD);
+    strip_newlines_from $current_branch;
+
+    # We store the notes in a temporary file.
+    my $notes_file = File::Temp->new();
+    my $editor = get_editor;
+
+    say "Waiting on $editor...";
+    qx($editor $notes_file);
+
+    # Now read the entire contents of $notes_file into the scalar
+    # $notes as a single string.  To do this we temporarily undefine
+    # the special $/ variable so that the <> operator will read in
+    # everything at once.  See 'perldoc perlfaq5' for information on
+    # this trick.
+    my $notes;
+    {
+        local $/ = undef;
+        open my $temporary_file_handle, "<", $notes_file
+            or die("Error: Cannot read from notes file $notes_file\n");
+        $notes = <$temporary_file_handle>;
+    }
+
+    save_notes_for_branch($current_branch, $notes);
+    say "Saved notes for $current_branch";
 }
 
 __END__
