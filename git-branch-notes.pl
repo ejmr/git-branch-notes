@@ -219,9 +219,14 @@ if ($command ~~ "add") {
     # the special $/ variable so that the <> operator will read in
     # everything at once.  See 'perldoc perlfaq5' for information on
     # this trick.
+    #
+    # We also need to call seek() to rewind to the beginning of the
+    # file just in case we wrote existing notes to it already,
+    # otherwise <> will not read those existing notes.
     my $notes;
     {
         local $/ = undef;
+        seek($notes_file, 0, 0);
         $notes = <$notes_file>;
     }
 
