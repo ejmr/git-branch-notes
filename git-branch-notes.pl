@@ -102,6 +102,19 @@ sub get_editor() {
     }
 }
 
+# Takes a branch name and a string of notes, and saves those notes in
+# the database for that branch.  If the branch is already in the
+# database then the new notes replace the existing ones.  This
+# function returns no value.
+sub save_notes_for_branch($$) {
+    my ($branch, $notes) = @_;
+    my $insert = $database->prepare(q[
+        INSERT OR REPLACE INTO branch_notes (name, notes) VALUES (?, ?);
+    ]);
+
+    $insert->execute($branch, $notes);
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -143,7 +156,8 @@ if ($command ~~ "add") {
         $notes = <$temporary_file_handle>;
     }
 
-    say "\n$current_branch\n\n$notes";
+    save_notes_for_branch($current_branch, $notes);
+    say "Saved notes for $current_branch";
 }
 
 __END__
