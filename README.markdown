@@ -68,9 +68,10 @@ branch:
 
 During the ‘Waiting on…’ statement the program opens the user’s editor
 on a temporary file where the user writes the notes he wants to save.
-To determine the editor the program first looks for the environment
-variable `EDITOR`, and then checks the Git configuration value
-`core.editor`, and failing that aborts with an error message.
+Any existing notes for the current branch will be available for
+editing.  To determine the editor the program first looks for the
+environment variable `EDITOR`, and then checks the Git configuration
+value `core.editor`, and failing that aborts with an error message.
 
 And here is an example of `rm`, which removes notes about a given
 branch:
