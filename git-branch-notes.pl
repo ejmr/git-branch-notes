@@ -81,6 +81,17 @@ if ($#ARGV > 0) {
     $argument = $ARGV[1];
 }
 
+# If a command requires $argument to have a value, i.e. a non-empty
+# string, we test for that here and report an error if there is no
+# argument to use.
+our @commands_requiring_argument = qw(rm);
+
+if (grep { $command ~~ $_ } @commands_requiring_argument) {
+    unless ($argument) {
+        die("Error: Command $command requires an argument\n");
+    }
+}
+
 # Returns an array reference of all of the branch information.  Each
 # element in the array is itself an array with two elements:
 #
