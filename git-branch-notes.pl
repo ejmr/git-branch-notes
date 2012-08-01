@@ -3,10 +3,10 @@
 # git branch-notes [show [branch] | add [message] | rm <branch> | clear]
 #
 # This script provides a Git command that keeps a database of notes on
-# all non-remote branches.  The intent is to help project maintainers
-# keep track of details on branches, such as which ones to merge,
-# particular commits to cherry-pick, and so on.  See the file
-# 'README.markdown' for more information about how to use the program.
+# branches.  The intent is to help project maintainers keep track of
+# details on branches, such as which ones to merge, particular commits
+# to cherry-pick, and so on.  See the file 'README.markdown' for more
+# information about how to use the program.
 #
 #
 #
