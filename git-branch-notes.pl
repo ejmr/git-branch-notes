@@ -65,8 +65,11 @@ $database->do(q[
 # Read our command from the command-line.
 our $command = $ARGV[0];
 
+# These are valid commands.
+our @valid_commands = qw(show add rm);
+
 # Make sure the command is valid, i.e. one we recognize.
-if ($command !~ "show" and $command !~ "add") {
+unless (grep { $command ~~ $_ } @valid_commands) {
     die("Error: Invalid command $command\n");
 }
 
