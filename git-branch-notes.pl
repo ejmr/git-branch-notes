@@ -20,6 +20,7 @@
 
 use common::sense;
 use DBI;
+use File::Temp;
 
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
@@ -122,7 +123,27 @@ if ($command ~~ "add") {
     my $current_branch = qx(git name-rev --name-only HEAD);
     strip_newlines_from $current_branch;
 
-    say $current_branch;
+    # We store the notes in a temporary file.
+    my $notes_file = File::Temp->new();
+    my $editor = get_editor;
+
+    say "Waiting on $editor...";
+    qx($editor $notes_file);
+
+    # Now read the entire contents of $notes_file into the scalar
+    # $notes as a single string.  To do this we temporarily undefine
+    # the special $/ variable so that the <> operator will read in
+    # everything at once.  See 'perldoc perlfaq5' for information on
+    # this trick.
+    my $notes;
+    {
+        local $/ = undef;
+        open my $temporary_file_handle, "<", $notes_file
+            or die("Error: Cannot read from notes file $notes_file\n");
+        $notes = <$temporary_file_handle>;
+    }
+
+    say "\n$current_branch\n\n$notes";
 }
 
 __END__
