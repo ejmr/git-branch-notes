@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show|add|rm <branch>]
+# git branch-notes [show | add | rm <branch> | clear]
 #
 # This script provides a Git command that keeps a database of notes on
 # all non-remote branches.  The intent is to help project maintainers
@@ -66,7 +66,7 @@ $database->do(q[
 our $command = $ARGV[0];
 
 # These are valid commands.
-our @valid_commands = qw(show add rm);
+our @valid_commands = qw(show add rm clear);
 
 # Make sure the command is valid, i.e. one we recognize.
 unless (grep { $command ~~ $_ } @valid_commands) {
@@ -148,6 +148,12 @@ sub remove_branch($) {
     $delete->execute($branch);
 }
 
+# Removes information about all branches from the database.  This
+# function returns no value.
+sub clear_database() {
+    $database->do(q[DELETE FROM branch_notes;]);
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -202,6 +208,15 @@ if ($command ~~ "add") {
 if ($command ~~ "rm") {
     remove_branch($argument);
     say "Removed notes for $argument";
+    exit(0);
+}
+
+# Process the 'clear' command.  This does the same thing as 'rm'
+# except it removes the information about every branch in the
+# database, wiping the entire thing clean.
+if ($command ~~ "clear") {
+    clear_database;
+    say "Removed all branch notes";
     exit(0);
 }
 
