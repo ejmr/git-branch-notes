@@ -119,7 +119,10 @@ if ($command ~~ "show") {
 # Process the 'add' command.  This opens up the user's editor and
 # reads in a note to save for the current branch.
 if ($command ~~ "add") {
-    say get_editor;
+    my $current_branch = qx(git name-rev --name-only HEAD);
+    strip_newlines_from $current_branch;
+
+    say $current_branch;
 }
 
 __END__
