@@ -44,7 +44,7 @@ Usage
 `git branch-notes` accepts the following commands:
 
 1. `show`
-2. `add`
+2. `add [message]`
 3. `rm <branch>`
 4. `clear`
 
@@ -77,6 +77,12 @@ Any existing notes for the current branch will be available for
 editing.  To determine the editor the program first looks for the
 environment variable `EDITOR`, and then checks the Git configuration
 value `core.editor`, and failing that aborts with an error message.
+
+The `add` command accepts an optional string that the program will
+save as the new notes for the current branch.  This will replace the
+existing notes if there are any.  For example:
+
+    $ git branch-notes add "Do not merge."
 
 Here is an example of `rm`, which removes notes about a given
 branch:
