@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show | add | rm <branch> | clear]
+# git branch-notes [show | add [message] | rm <branch> | clear]
 #
 # This script provides a Git command that keeps a database of notes on
 # all non-remote branches.  The intent is to help project maintainers
@@ -201,18 +201,28 @@ if ($command ~~ "add") {
     my $current_branch = qx(git name-rev --name-only HEAD);
     strip_newlines_from $current_branch;
 
-    # We store the notes in a temporary file.
+    # We store the notes in a temporary file that the user modifies
+    # with the editor from above.  However, if the global variable
+    # $argument is not empty then we treat that as the new notes to
+    # add for the branch.  This makes it easy to add short messages
+    # without opening the editor.
     my $notes_file = File::Temp->new();
-    my $editor = get_editor;
 
-    # Make sure we have an editor.
-    unless ($editor) {
-        die("Error: No available editor to add notes\n");
+    if ($argument) {
+        print $notes_file $argument;
     }
+    else {
+        my $editor = get_editor;
 
-    load_notes_for_branch($current_branch, $notes_file);
-    say "Waiting on $editor...";
-    qx($editor $notes_file);
+        unless ($editor) {
+            die("Error: No available editor to add notes\n");
+        }
+
+        load_notes_for_branch($current_branch, $notes_file);
+        say "Adding notes for $current_branch";
+        say "Waiting on $editor...";
+        qx($editor $notes_file);
+    }
 
     # Now read the entire contents of $notes_file into the scalar
     # $notes as a single string.  To do this we temporarily undefine
