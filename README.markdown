@@ -2,13 +2,13 @@ git branch-notes
 ================
 
 `git branch-notes` is a Perl program that helps project maintainers
-keep a list of notes about all non-remote branches in a Git
-repository.  For example, a maintainer can use this program to help
-keep track of branches that he needs to merge, or not merge, or
-branches that have commits to cherry-pick, et cetera.  This
-information remains in the user’s local repository only and is not
-shared by `git-push` or other commands, under the assumption that
-other project contributors will not need to see maintainer notes.
+keep a list of notes about all branches in a Git repository.  For
+example, a maintainer can use this program to help keep track of
+branches that he needs to merge, or not merge, or branches that have
+commits to cherry-pick, et cetera.  This information remains in the
+user’s local repository only and is not shared by `git-push` or other
+commands, under the assumption that other project contributors will
+not need to see maintainer notes.
 
 
 
