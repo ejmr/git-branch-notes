@@ -161,6 +161,8 @@ if ($command ~~ "show") {
         say "=" x length($branch->[0]), "\n";
         say $branch->[1], "\n\n\n";
     }
+
+    exit(0);
 }
 
 # Process the 'add' command.  This opens up the user's editor and
@@ -191,6 +193,7 @@ if ($command ~~ "add") {
 
     save_notes_for_branch($current_branch, $notes);
     say "Saved notes for $current_branch";
+    exit(0);
 }
 
 # Process the 'rm' command.  This takes a branch name and removes all
@@ -199,6 +202,7 @@ if ($command ~~ "add") {
 if ($command ~~ "rm") {
     remove_branch($argument);
     say "Removed notes for $argument";
+    exit(0);
 }
 
 __END__
