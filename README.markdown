@@ -41,7 +41,12 @@ The program may work with older versions of both Perl and SQLite.
 Usage
 =====
 
-`git branch-notes` has three commands: `show`, `add`, and `rm`.
+`git branch-notes` accepts the following commands:
+
+1. `show`
+2. `add`
+3. `rm <branch>`
+4. `clear`
 
 Here is an example of the `show` command, which lists all of the
 branches and their notes on standard output:
@@ -72,11 +77,14 @@ To determine the editor the program first looks for the environment
 variable `EDITOR`, and then checks the Git configuration value
 `core.editor`, and failing that aborts with an error message.
 
-And here is an example of `rm`, which removes notes about a given
+Here is an example of `rm`, which removes notes about a given
 branch:
 
     $ git branch-notes rm ejmr/completed-feature
     Removed notes for ejmr/completed-feature
+
+The `clear` command performs the same action as `rm` except it removes
+the notes for *all* branches in the database.
 
 
 
