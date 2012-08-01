@@ -198,12 +198,6 @@ if ($command ~~ "show") {
 # Process the 'add' command.  This opens up the user's editor and
 # reads in a note to save for the current branch.
 if ($command ~~ "add") {
-    my $editor = get_editor;
-
-    unless ($editor) {
-        die("Error: No available editor to add notes\n");
-    }
-
     my $current_branch = qx(git name-rev --name-only HEAD);
     strip_newlines_from $current_branch;
 
@@ -218,6 +212,12 @@ if ($command ~~ "add") {
         print $notes_file $argument;
     }
     else {
+        my $editor = get_editor;
+
+        unless ($editor) {
+            die("Error: No available editor to add notes\n");
+        }
+
         load_notes_for_branch($current_branch, $notes_file);
         say "Waiting on $editor...";
         qx($editor $notes_file);
