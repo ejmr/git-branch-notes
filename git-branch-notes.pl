@@ -154,6 +154,28 @@ sub clear_database() {
     $database->do(q[DELETE FROM branch_notes;]);
 }
 
+# Takes a branch name and a file handle.  If the database contains any
+# notes for that branch then they will be written into the file.  This
+# is intended to be used on the temporary file that use to add new
+# notes so that users can edit existing notes.  We assume the file
+# handle is already opened.  This function returns no value.
+sub load_notes_for_branch($$) {
+    my ($branch, $file) = @_;
+    my $select = $database->prepare(q[
+        SELECT notes
+        FROM branch_notes
+        WHERE name = ?;
+    ]);
+
+    $select->execute($branch);
+
+    my $results = $select->fetchall_arrayref;
+
+    if (@$results) {
+        print $file $results->[0][0];
+    }
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -181,6 +203,7 @@ if ($command ~~ "add") {
     my $notes_file = File::Temp->new();
     my $editor = get_editor;
 
+    load_notes_for_branch($current_branch, $notes_file);
     say "Waiting on $editor...";
     qx($editor $notes_file);
 
