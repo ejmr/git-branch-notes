@@ -22,6 +22,8 @@ use common::sense;
 use DBI;
 use File::Temp;
 
+our $VERSION = "1.0";
+
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
 # can end up with newlines in the middle of strings.  So we use this
