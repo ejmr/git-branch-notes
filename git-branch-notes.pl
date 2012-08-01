@@ -137,6 +137,17 @@ sub save_notes_for_branch($$) {
     $insert->execute($branch, $notes);
 }
 
+# Removes the information about the given branch from the database.
+# This function returns no value.
+sub remove_branch($) {
+    my ($branch) = @_;
+    my $delete = $database->prepare(q[
+        DELETE FROM branch_notes WHERE name = ?;
+    ]);
+
+    $delete->execute($branch);
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -180,6 +191,14 @@ if ($command ~~ "add") {
 
     save_notes_for_branch($current_branch, $notes);
     say "Saved notes for $current_branch";
+}
+
+# Process the 'rm' command.  This takes a branch name and removes all
+# information about that branch from our database of notes.  The name
+# of the branch to remove will be in the global variable $argument.
+if ($command ~~ "rm") {
+    remove_branch($argument);
+    say "Removed notes for $argument";
 }
 
 __END__
