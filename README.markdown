@@ -41,15 +41,10 @@ The program may work with older versions of both Perl and SQLite.
 Usage
 =====
 
-`git branch-notes` has two commands: `show` and `add`.  The first
-command will list all of the branches and their notes on standard
-output.  The second command will open the user’s editor to add notes
-for the current branch.  To determine the editor the program first
-looks for the environment variable `EDITOR`, and then checks the Git
-configuration value `core.editor`, and failing that aborts with an
-error message.
+`git branch-notes` has three commands: `show`, `add`, and `rm`.
 
-Here is an example of the `show` command:
+Here is an example of the `show` command, which lists all of the
+branches and their notes on standard output:
 
     $ git branch-notes show
     ejmr/add-command
@@ -64,7 +59,8 @@ Here is an example of the `show` command:
 
     Can almost merge.
 
-And here is an example of `add`:
+Here is an example of `add`, which saves notes about the current
+branch:
 
     $ git branch-notes add
     Waiting on emacs...
@@ -72,6 +68,17 @@ And here is an example of `add`:
 
 During the ‘Waiting on…’ statement the program opens the user’s editor
 on a temporary file where the user writes the notes he wants to save.
+To determine the editor the program first looks for the environment
+variable `EDITOR`, and then checks the Git configuration value
+`core.editor`, and failing that aborts with an error message.
+
+And here is an example of `rm`, which removes notes about a given
+branch:
+
+    $ git branch-notes rm ejmr/completed-feature
+    Removed notes for ejmr/completed-feature
+
+
 
 License
 =======

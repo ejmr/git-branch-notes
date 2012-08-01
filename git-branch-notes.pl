@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show|add]
+# git branch-notes [show|add|rm <branch>]
 #
 # This script provides a Git command that keeps a database of notes on
 # all non-remote branches.  The intent is to help project maintainers
@@ -65,9 +65,31 @@ $database->do(q[
 # Read our command from the command-line.
 our $command = $ARGV[0];
 
+# These are valid commands.
+our @valid_commands = qw(show add rm);
+
 # Make sure the command is valid, i.e. one we recognize.
-if ($command !~ "show" and $command !~ "add") {
+unless (grep { $command ~~ $_ } @valid_commands) {
     die("Error: Invalid command $command\n");
+}
+
+# Some commands take an extra argument.  Here we read it if it exists.
+# But if there isn't one then we set the argument to an empty string.
+our $argument = q();
+
+if ($#ARGV > 0) {
+    $argument = $ARGV[1];
+}
+
+# If a command requires $argument to have a value, i.e. a non-empty
+# string, we test for that here and report an error if there is no
+# argument to use.
+our @commands_requiring_argument = qw(rm);
+
+if (grep { $command ~~ $_ } @commands_requiring_argument) {
+    unless ($argument) {
+        die("Error: Command $command requires an argument\n");
+    }
 }
 
 # Returns an array reference of all of the branch information.  Each
@@ -115,6 +137,17 @@ sub save_notes_for_branch($$) {
     $insert->execute($branch, $notes);
 }
 
+# Removes the information about the given branch from the database.
+# This function returns no value.
+sub remove_branch($) {
+    my ($branch) = @_;
+    my $delete = $database->prepare(q[
+        DELETE FROM branch_notes WHERE name = ?;
+    ]);
+
+    $delete->execute($branch);
+}
+
 # Process the 'show' command.  We display the name and notes for each
 # branch on standard output.  The output format is in Markdown and
 # uses multiple newlines to separate branches.  That is because
@@ -158,6 +191,14 @@ if ($command ~~ "add") {
 
     save_notes_for_branch($current_branch, $notes);
     say "Saved notes for $current_branch";
+}
+
+# Process the 'rm' command.  This takes a branch name and removes all
+# information about that branch from our database of notes.  The name
+# of the branch to remove will be in the global variable $argument.
+if ($command ~~ "rm") {
+    remove_branch($argument);
+    say "Removed notes for $argument";
 }
 
 __END__
