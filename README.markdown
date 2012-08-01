@@ -48,8 +48,9 @@ Usage
 3. `rm <branch>`
 4. `clear`
 
-Here is an example of the `show` command, which lists all of the
-branches and their notes on standard output:
+If the user provides no command then `show` is the default.  Here is
+an example of the command, which lists all of the branches and their
+notes on standard output:
 
     $ git branch-notes show
     ejmr/add-command

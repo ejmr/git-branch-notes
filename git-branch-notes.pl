@@ -64,8 +64,9 @@ $database->do(q[
     );
 ]);
 
-# Read our command from the command-line.
-our $command = $ARGV[0];
+# Read our command from the command-line.  If there is no given
+# command then we default to 'show'.
+our $command = $ARGV[0] || "show";
 
 # These are valid commands.
 our @valid_commands = qw(show add rm clear);
