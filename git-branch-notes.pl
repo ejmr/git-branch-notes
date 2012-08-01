@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show|add|rm <branch>]
+# git branch-notes [show | add | rm <branch> | clear]
 #
 # This script provides a Git command that keeps a database of notes on
 # all non-remote branches.  The intent is to help project maintainers
@@ -66,7 +66,7 @@ $database->do(q[
 our $command = $ARGV[0];
 
 # These are valid commands.
-our @valid_commands = qw(show add rm);
+our @valid_commands = qw(show add rm clear);
 
 # Make sure the command is valid, i.e. one we recognize.
 unless (grep { $command ~~ $_ } @valid_commands) {
