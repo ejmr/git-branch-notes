@@ -205,6 +205,11 @@ if ($command ~~ "add") {
     my $notes_file = File::Temp->new();
     my $editor = get_editor;
 
+    # Make sure we have an editor.
+    unless ($editor) {
+        die("Error: No available editor to add notes\n");
+    }
+
     load_notes_for_branch($current_branch, $notes_file);
     say "Waiting on $editor...";
     qx($editor $notes_file);
