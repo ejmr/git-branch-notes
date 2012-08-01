@@ -73,6 +73,14 @@ unless (grep { $command ~~ $_ } @valid_commands) {
     die("Error: Invalid command $command\n");
 }
 
+# Some commands take an extra argument.  Here we read it if it exists.
+# But if there isn't one then we set the argument to an empty string.
+our $argument = q();
+
+if ($#ARGV > 0) {
+    $argument = $ARGV[1];
+}
+
 # Returns an array reference of all of the branch information.  Each
 # element in the array is itself an array with two elements:
 #
