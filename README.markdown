@@ -43,7 +43,7 @@ Usage
 
 `git branch-notes` accepts the following commands:
 
-1. `show`
+1. `show [branch]`
 2. `add [message]`
 3. `rm <branch>`
 4. `clear`
@@ -64,6 +64,9 @@ notes on standard output:
     =================
 
     Can almost merge.
+
+The `show` command optionally accepts the name of a branch to display
+the notes about only that branch.
 
 Here is an example of `add`, which saves notes about the current
 branch:

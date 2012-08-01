@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show | add [message] | rm <branch> | clear]
+# git branch-notes [show [branch] | add [message] | rm <branch> | clear]
 #
 # This script provides a Git command that keeps a database of notes on
 # all non-remote branches.  The intent is to help project maintainers
@@ -186,6 +186,11 @@ sub load_notes_for_branch($$) {
 # into emails, and those I always write in Markdown.
 if ($command ~~ "show") {
     my $information = get_branch_information;
+
+    # Are we showing notes only for a specific branch?
+    if ($argument) {
+        @$information = grep { $argument ~~ $_->[0] } @$information;
+    }
 
     for my $branch (@$information) {
         say $branch->[0];
