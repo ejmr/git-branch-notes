@@ -219,6 +219,7 @@ if ($command ~~ "add") {
         }
 
         load_notes_for_branch($current_branch, $notes_file);
+        say "Adding notes for $current_branch";
         say "Waiting on $editor...";
         qx($editor $notes_file);
     }
