@@ -99,6 +99,31 @@ the notes for *all* branches in the database.
 
 
 
+What About git-branch?
+======================
+
+There already exists the command `git branch --edit-description` as a
+standard part of Git.  So it seems worthwhile to justify the need for
+`git branch-notes`.
+
+The most glaring limitation of `git branch --edit-description` is that
+it only stores information about one branch at a time.  The
+description goes into the file `.git/BRANCH_DESCRIPTION`.  When you
+change branches and add a new description that destroys the existing
+description file.
+
+The two commands also serve different purposes.  Running `git
+request-pull` exposes the information in `.git/BRANCH_DESCRIPTION`.
+This helps give the person who may accept the pull a better idea of
+the purpose of the branch.  In other words, branch descriptions help
+communicate information *to* project maintainers.  The purpose of `git
+branch-notes` is for project maintainers to store information for
+*themselves* that they do not feel is important to share, i.e. tedious
+notes about branch maintenance that would be uninteresting to other
+developers on a team.
+
+
+
 License
 =======
 
