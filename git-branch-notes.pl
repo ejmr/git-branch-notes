@@ -120,7 +120,7 @@ sub get_editor() {
         return $ENV{"EDITOR"};
     }
     elsif (qx(git config --get core.editor)) {
-        return qx(git config --get.core.editor);
+        return qx(git config --get core.editor);
     }
     else {
         return q();
