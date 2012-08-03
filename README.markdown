@@ -72,6 +72,7 @@ Here is an example of `add`, which saves notes about the current
 branch:
 
     $ git branch-notes add
+    Adding notes for ejmr/rm-notes
     Waiting on emacs...
     Saved notes for ejmr/rm-notes
 
