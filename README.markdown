@@ -36,6 +36,10 @@ The program requires the following software:
 
 The program may work with older versions of both Perl and SQLite.
 
+git-branch-notes should work on Windows and Mac, but I have only
+tested it on Linux.  Reports about usability on other platforms will
+be welcome.
+
 
 
 Usage
