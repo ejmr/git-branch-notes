@@ -214,8 +214,24 @@ if ($command ~~ "add") {
     # without opening the editor.
     my $notes_file = File::Temp->new();
 
+    # If we have access to the 'fmt' program then we call that on our
+    # $argument, just in case it is longer that seventy-something
+    # characters.  It is unlikely that Windows platforms have this.
+    # We call 'which' to find out where 'fmt' is, but really what we
+    # are interested in is if the program errors out; since Windows
+    # programs will likely also not have 'which'.
     if ($argument) {
-        print $notes_file $argument;
+        my $have_fmt_program = 0;
+
+        qx(which fmt);
+        $have_fmt_program = not $?;
+
+        if ($have_fmt_program) {
+            print $notes_file qx(echo "$argument" | fmt);
+        }
+        else {
+            print $notes_file $argument;
+        }
     }
     else {
         my $editor = get_editor;
