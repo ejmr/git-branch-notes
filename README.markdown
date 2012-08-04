@@ -1,7 +1,7 @@
 git branch-notes
 ================
 
-`git branch-notes` is a Perl program that helps project maintainers
+git-branch-notes is a Perl program that helps project maintainers
 keep a list of notes about all branches in a Git repository.  For
 example, a maintainer can use this program to help keep track of
 branches that he needs to merge, or not merge, or branches that have
@@ -22,7 +22,7 @@ this command to create the alias:
 
     $ git config --global --add alias.branch-notes "/home/eric/Scripts/git-branch-notes.pl"
 
-Now I can use the command `git branch-notes` in any repository.
+Now I can use the command git-branch-notes in any repository.
 
 The program requires the following software:
 
@@ -41,7 +41,7 @@ The program may work with older versions of both Perl and SQLite.
 Usage
 =====
 
-`git branch-notes` accepts the following commands:
+git-branch-notes accepts the following commands:
 
 1. `show [branch]`
 2. `add [message]`
@@ -105,7 +105,7 @@ What About git-branch?
 
 There already exists the command `git branch --edit-description` as a
 standard part of Git.  So it seems worthwhile to justify the need for
-`git branch-notes`.
+git-branch-notes.
 
 The most glaring limitation of `git branch --edit-description` is that
 it only stores information about one branch at a time.  The
