@@ -48,7 +48,7 @@ Usage
 git-branch-notes accepts the following commands:
 
 1. `show [branch]`
-2. `add [message]`
+2. `add|edit [message]`
 3. `rm <branch>`
 4. `clear`
 
@@ -92,6 +92,8 @@ save as the new notes for the current branch.  This will replace the
 existing notes if there are any.  For example:
 
     $ git branch-notes add "Do not merge."
+
+The command `edit` is an alias for `add`.
 
 Here is an example of `rm`, which removes notes about a given
 branch:

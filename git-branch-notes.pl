@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show [branch] | add [message] | rm <branch> | clear]
+# git branch-notes [show [branch] | add/edit [message] | rm <branch> | clear]
 #
 # This script provides a Git command that keeps a database of notes on
 # branches.  The intent is to help project maintainers keep track of
@@ -22,7 +22,7 @@ use common::sense;
 use DBI;
 use File::Temp;
 
-our $VERSION = "1.0";
+our $VERSION = "1.1";
 
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
@@ -69,7 +69,7 @@ $database->do(q[
 our $command = $ARGV[0] || "show";
 
 # These are valid commands.
-our @valid_commands = qw(show add rm clear);
+our @valid_commands = qw(show add edit rm clear);
 
 # Make sure the command is valid, i.e. one we recognize.
 unless (grep { $command ~~ $_ } @valid_commands) {
@@ -201,9 +201,9 @@ if ($command ~~ "show") {
     exit(0);
 }
 
-# Process the 'add' command.  This opens up the user's editor and
-# reads in a note to save for the current branch.
-if ($command ~~ "add") {
+# Process the 'add' and 'edit' commands.  This opens up the user's
+# editor and reads in a note to save for the current branch.
+if ($command ~~ "add" or $command ~~ "edit") {
     my $current_branch = qx(git name-rev --name-only HEAD);
     strip_newlines_from $current_branch;
 
