@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show [branch] | add/edit [message] | rm <branch> | clear]
+# git branch-notes
 #
 # This script provides a Git command that keeps a database of notes on
 # branches.  The intent is to help project maintainers keep track of
