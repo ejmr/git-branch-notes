@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# git branch-notes [show [branch] | add/edit [message] | rm <branch> | clear]
+# git branch-notes
 #
 # This script provides a Git command that keeps a database of notes on
 # branches.  The intent is to help project maintainers keep track of
@@ -22,7 +22,7 @@ use common::sense;
 use DBI;
 use File::Temp;
 
-our $VERSION = "1.1";
+our $VERSION = "1.2";
 
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
@@ -69,7 +69,7 @@ $database->do(q[
 our $command = $ARGV[0] || "show";
 
 # These are valid commands.
-our @valid_commands = qw(show add edit rm clear);
+our @valid_commands = qw(show add edit rm clear sync);
 
 # Make sure the command is valid, i.e. one we recognize.
 unless (grep { $command ~~ $_ } @valid_commands) {
@@ -93,6 +93,33 @@ if (grep { $command ~~ $_ } @commands_requiring_argument) {
     unless ($argument) {
         die("Error: Command $command requires an argument\n");
     }
+}
+
+# Returns an array listing all of the branches that we are storing
+# notes on which do not exist in the repository.  This function only
+# considers local branches and not remote ones.
+sub get_branches_with_no_notes() {
+    my $branches_with_notes = $database->selectall_arrayref(q[
+        SELECT name FROM branch_notes;
+    ]);
+
+    my @local_branches = map {
+        # git-show-ref prints out a lot of crap at the start of its
+        # output which we don't need to keep.
+        if (/\w{40}+\s+refs\/heads\/(.+)/) {
+            $1
+        }
+    } qx(git show-ref --heads);
+
+    my @branches_with_no_notes = ();
+
+    foreach my $branch (@$branches_with_notes) {
+        unless (grep { $branch->[0] ~~ $_ } @local_branches) {
+            push @branches_with_no_notes => $branch->[0];
+        }
+    }
+
+    return @branches_with_no_notes;
 }
 
 # Returns an array reference of all of the branch information.  Each
@@ -198,6 +225,21 @@ if ($command ~~ "show") {
         say $branch->[1], "\n\n\n";
     }
 
+    exit(0);
+}
+
+# Process the 'sync' command.  Delete all of the notes we have saved
+# on branches that no longer exist in the repository.
+if ($command ~~ "sync") {
+    $database->begin_work;
+
+    foreach (get_branches_with_no_notes()) {
+        $database->do("DELETE FROM branch_notes WHERE name = ?", undef, $_);
+    }
+
+    $database->commit;
+
+    say "Deleted notes for non-existent branches";
     exit(0);
 }
 
