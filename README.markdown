@@ -51,6 +51,7 @@ git-branch-notes accepts the following commands:
 2. `add|edit [message]`
 3. `rm <branch>`
 4. `clear`
+5. `sync`
 
 If the user provides no command then `show` is the default.  Here is
 an example of the command, which lists all of the branches and their
@@ -103,6 +104,12 @@ branch:
 
 The `clear` command performs the same action as `rm` except it removes
 the notes for *all* branches in the database.
+
+The `sync` command will delete all notes for local branches that no
+longer exist.  This can be useful after a merge when you delete a
+number of branches and also want to delete their notes.  You can run
+`git branch-notes sync` to get rid of all of those notes, so long as
+the local branches themselves are also deleted.
 
 
 
