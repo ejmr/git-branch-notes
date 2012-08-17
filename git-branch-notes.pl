@@ -69,7 +69,7 @@ $database->do(q[
 our $command = $ARGV[0] || "show";
 
 # These are valid commands.
-our @valid_commands = qw(show add edit rm clear);
+our @valid_commands = qw(show add edit rm clear sync);
 
 # Make sure the command is valid, i.e. one we recognize.
 unless (grep { $command ~~ $_ } @valid_commands) {
