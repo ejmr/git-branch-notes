@@ -95,6 +95,33 @@ if (grep { $command ~~ $_ } @commands_requiring_argument) {
     }
 }
 
+# Returns an array listing all of the branches that we are storing
+# notes on which do not exist in the repository.  This function only
+# considers local branches and not remote ones.
+sub get_branches_with_no_notes() {
+    my $branches_with_notes = $database->selectall_arrayref(q[
+        SELECT name FROM branch_notes;
+    ]);
+
+    my @local_branches = map {
+        # git-show-ref prints out a lot of crap at the start of its
+        # output which we don't need to keep.
+        if (/\w{40}+\s+refs\/heads\/(.+)/) {
+            $1
+        }
+    } qx(git show-ref --heads);
+
+    my @branches_with_no_notes = ();
+
+    foreach my $branch (@$branches_with_notes) {
+        unless (grep { $branch->[0] ~~ $_ } @local_branches) {
+            push @branches_with_no_notes => $branch->[0];
+        }
+    }
+
+    return @branches_with_no_notes;
+}
+
 # Returns an array reference of all of the branch information.  Each
 # element in the array is itself an array with two elements:
 #
