@@ -228,6 +228,21 @@ if ($command ~~ "show") {
     exit(0);
 }
 
+# Process the 'sync' command.  Delete all of the notes we have saved
+# on branches that no longer exist in the repository.
+if ($command ~~ "sync") {
+    $database->begin_work;
+
+    foreach (get_branches_with_no_notes()) {
+        $database->do("DELETE FROM branch_notes WHERE name = ?", undef, $_);
+    }
+
+    $database->commit;
+
+    say "Deleted notes for non-existent branches";
+    exit(0);
+}
+
 # Process the 'add' and 'edit' commands.  This opens up the user's
 # editor and reads in a note to save for the current branch.
 if ($command ~~ "add" or $command ~~ "edit") {
