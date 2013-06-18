@@ -30,9 +30,7 @@ The program requires the following software:
 
 2. SQLite 3 or later.
 
-3. The Perl module `common::sense`.
-
-4. The Perl module `DBD::SQLite`.
+3. The Perl module `DBD::SQLite`.
 
 The program may work with older versions of both Perl and SQLite.
 

@@ -18,11 +18,11 @@
 #
 ######################################################################
 
-use common::sense;
+use v5.14;
 use DBI;
 use File::Temp;
 
-our $VERSION = "1.2";
+our $VERSION = "1.3.0";
 
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
