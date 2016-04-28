@@ -24,6 +24,9 @@ use File::Temp;
 
 our $VERSION = "1.3.0";
 
+# smartmatch is once again experimental as of 5.18
+no if $] >= 5.018, warnings => "experimental::smartmatch";
+
 # Removes all newlines from the given string.  This seems redundant
 # because of chomp() but when parsing the output of Git commands we
 # can end up with newlines in the middle of strings.  So we use this
